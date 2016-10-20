@@ -61,7 +61,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>org.mlgb.storm.back_propagation.RemoteTopologyRunner</mainClass>
+                            <mainClass>org.mlgb.storm.back_propagation.topology.RemoteTopologyRunner</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
