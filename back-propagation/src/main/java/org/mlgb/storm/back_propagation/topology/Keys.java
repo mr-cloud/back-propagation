@@ -59,5 +59,6 @@ public class Keys {
 	//default configuration file name
 	public static final String DEFAULT_CONFIG = "default_config.properties";
 	
-	
+	//topology name
+	public static final String TOPOLOGY_NAME = "BACK-PROPAGATION";
 }
