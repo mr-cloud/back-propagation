@@ -39,7 +39,6 @@ public class CounterBolt extends BaseBasicBolt{
 	@Override
 	public void prepare(@SuppressWarnings("rawtypes") Map stormConf, TopologyContext context) {
 		// TODO Auto-generated method stub
-		super.prepare(stormConf, context);
 		this.countMetric = new CountMetric();
 		context.registerMetric(this.metricName, this.countMetric, this.metricTimeBucketSizeInSecs);
 	}
