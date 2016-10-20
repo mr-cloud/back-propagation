@@ -18,18 +18,18 @@ public class BoltBuilder {
 	
 	public SplitterBolt buildSplitter(){
 		String datasetType = this.configs.getProperty(Keys.KAFKA_TOPIC);
-		String outputField = this.configs.getProperty(Keys.SPLITTER_BOLT_OUTPUTFIELD);
+		String outputField = Keys.SPLITTER_BOLT_OUTPUTFIELD;
 		return new SplitterBolt(datasetType, outputField);
 	}
 	
 	public SkewedSourceBolt buildSkewedSource(){
-		String outputField = this.configs.getProperty(Keys.SPLITTER_BOLT_OUTPUTFIELD);
+		String outputField = Keys.SPLITTER_BOLT_OUTPUTFIELD;
 		return new SkewedSourceBolt(outputField);
 	}
 	
 	public CounterBolt buildCounter(){
-		String outputField1 = this.configs.getProperty(Keys.COUNTER_BOLT_OUTPUTFIELD1);
-		String outputField2 = this.configs.getProperty(Keys.COUNTER_BOLT_OUTPUTFIELD2);
+		String outputField1 = Keys.COUNTER_BOLT_OUTPUTFIELD1;
+		String outputField2 = Keys.COUNTER_BOLT_OUTPUTFIELD2;
 		String metricName = this.configs.getProperty(Keys.METRIC_NAME);
 		int metricTimeBucketSizeInSecs = Integer.parseInt(this.configs.getProperty(Keys.METRIC_TIME_BUCKET_SIZE_IN_SECS));
 		int latencyInMillis = Integer.parseInt(this.configs.getProperty(Keys.LATENCY_IN_MILLIS));
@@ -37,8 +37,8 @@ public class BoltBuilder {
 	}
 	
 	public AggregatorBolt buildAggregator(){
-		String keyField = this.configs.getProperty(Keys.COUNTER_BOLT_OUTPUTFIELD1);
-		String valueField = this.configs.getProperty(Keys.COUNTER_BOLT_OUTPUTFIELD2);
+		String keyField = Keys.COUNTER_BOLT_OUTPUTFIELD1;
+		String valueField = Keys.COUNTER_BOLT_OUTPUTFIELD2;
 		return new AggregatorBolt(keyField, valueField);
 	}
 }
