@@ -26,7 +26,7 @@ public class SpoutBuilder {
 		String topic = configs.getProperty(Keys.KAFKA_TOPIC);
 		String zkRoot = configs.getProperty(Keys.KAFKA_ZKROOT);
 		String groupId = configs.getProperty(Keys.KAFKA_CONSUMERGROUP);
-		SpoutConfig spoutConfig = new SpoutConfig(hosts, topic, zkRoot + topic, groupId);
+		SpoutConfig spoutConfig = new SpoutConfig(hosts, topic, zkRoot + "/" + topic, groupId);
 		spoutConfig.scheme = new SchemeAsMultiScheme(new StringScheme());
 		//spoutConfig.ignoreZkOffsets = true;// read from head for each deployment or restart.
 		KafkaSpout kafkaSpout = new KafkaSpout(spoutConfig);
