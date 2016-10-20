@@ -1,4 +1,4 @@
-package org.mlgb.storm.back_propagation.bolt;
+package org.mlgb.storm.back_propagation.topology.bolt;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.storm.topology.BasicOutputCollector;
@@ -7,7 +7,7 @@ import org.apache.storm.topology.base.BaseBasicBolt;
 import org.apache.storm.tuple.Fields;
 import org.apache.storm.tuple.Tuple;
 import org.apache.storm.tuple.Values;
-import org.mlgb.storm.back_propagation.Keys;
+import org.mlgb.storm.back_propagation.topology.Keys;
 
 public class SplitterBolt extends BaseBasicBolt{
 	private static final long serialVersionUID = -4094707939635564788L;

@@ -1,4 +1,4 @@
-package org.mlgb.storm.back_propagation;
+package org.mlgb.storm.back_propagation.topology;
 
 import java.util.Properties;
 
@@ -28,7 +28,7 @@ public class RemoteTopologyRunner {
 	}
 	else{
 		System.out.println("Missing input : config file location, using default");
-		configFile = "default_config.properties";		
+		configFile = Keys.DEFAULT_CONFIG;		
 	}
 	Properties configs = loadConfigProperties(configFile);
     Config config = createConfig(shouldRunInDebugMode(args), configs);
@@ -57,7 +57,7 @@ private static boolean shouldRunInDebugMode(String[] args) {
     config.setMessageTimeoutSecs(Integer.parseInt(configs.getProperty(Keys.TIMEOUT)));
     config.setNumWorkers(Integer.parseInt(configs.getProperty(Keys.NUM_WORKERS)));
     config.setNumAckers(Integer.parseInt(configs.getProperty(Keys.NUM_WORKERS)));
-    config.registerMetricsConsumer(LoggingMetricsConsumer.class, 1);
+    config.registerMetricsConsumer(LoggingMetricsConsumer.class, Integer.parseInt(configs.getProperty(Keys.NUM_METRICS_CONSUMER)));
     config.setNumEventLoggers(Integer.parseInt(configs.getProperty(Keys.NUM_EVENTLOGGERS)));
     return config;
   }

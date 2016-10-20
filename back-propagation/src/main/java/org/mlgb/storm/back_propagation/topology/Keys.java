@@ -1,4 +1,4 @@
-package org.mlgb.storm.back_propagation;
+package org.mlgb.storm.back_propagation.topology;
 
 /**
  * This is an utility class. It contains the keys that should be present in the input config-file
@@ -17,6 +17,10 @@ public class Keys {
 	//splitter
 	public static final String SPLITTER_BOLT_ID = "splitter-bolt";
 	public static final String SPLITTER_BOLT_COUNT = "splitter-bolt.count";
+	
+	//skewed source
+	public static final String SKEWED_DATA_BOLT_ID = "skewed-source-bolt";
+	public static final String SKEWED_DATA_BOLT_COUNT = "skewed-source-bolt.count";
 	
 	//counter
 	public static final String COUNTER_BOLT_ID = "counter-bolt";
@@ -42,6 +46,18 @@ public class Keys {
 	public static final String SPLITTER_BOLT_OUTPUTFIELD = "word";
 	public static final String COUNTER_BOLT_OUTPUTFIELD1 = "word";
 	public static final String COUNTER_BOLT_OUTPUTFIELD2 = "count";
+	
+	//metrics consumer number
+	public static final String NUM_METRICS_CONSUMER = "NUM_METRICS_CONSUMER";
+	
+	//counter metric
+	public static final String METRIC_NAME = "METRIC_NAME";
+	public static final String METRIC_TIME_BUCKET_SIZE_IN_SECS = "METRIC_TIME_BUCKET_SIZE_IN_SECS";
+	//counter latency
+	public static final String LATENCY_IN_MILLIS = "LATENCY_IN_MILLIS";
+	
+	//default configuration file name
+	public static final String DEFAULT_CONFIG = "default_config.properties";
 	
 	
 }

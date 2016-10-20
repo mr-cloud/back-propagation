@@ -1,4 +1,4 @@
-package org.mlgb.storm.back_propagation.spout;
+package org.mlgb.storm.back_propagation.topology.spout;
 
 import org.apache.storm.kafka.BrokerHosts;
 import org.apache.storm.kafka.KafkaSpout;
@@ -9,7 +9,7 @@ import org.apache.storm.kafka.ZkHosts;
 import java.util.Properties;
 
 import org.apache.storm.spout.SchemeAsMultiScheme;
-import org.mlgb.storm.back_propagation.Keys;
+import org.mlgb.storm.back_propagation.topology.Keys;
 
 /**
  * @author Leo

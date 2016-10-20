@@ -1,4 +1,4 @@
-package org.mlgb.storm.back_propagation.bolt;
+package org.mlgb.storm.back_propagation.topology.bolt;
 
 import java.util.HashMap;
 import java.util.Map;
