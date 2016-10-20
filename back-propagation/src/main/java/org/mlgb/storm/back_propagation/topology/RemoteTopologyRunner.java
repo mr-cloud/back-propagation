@@ -39,7 +39,8 @@ public class RemoteTopologyRunner {
 	// TODO Auto-generated method stub
 		Properties configs = new Properties();
 		try {
-			configs.load(RemoteTopologyRunner.class.getResourceAsStream("/default_config.properties"));
+			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+			configs.load(classLoader.getResourceAsStream(configFile));
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			System.exit(0);
