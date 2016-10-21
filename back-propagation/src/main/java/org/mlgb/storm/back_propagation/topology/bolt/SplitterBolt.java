@@ -25,7 +25,8 @@ public class SplitterBolt extends BaseBasicBolt{
     public void execute(Tuple tuple, BasicOutputCollector collector) {
 		if(this.datsetType.equalsIgnoreCase(Keys.WIKIPEDIA_SAMPLE)
 				|| this.datsetType.equalsIgnoreCase(Keys.WIKIPEDIA)){
-	        String tokens[] = tuple.getString(0).split("\\s+");
+	        String tokens[] = tuple.getString(0).split(" ");
+			//	        String tokens[] = tuple.getString(0).split("\\s+");
 	        if(tokens.length > 2 && !StringUtils.isBlank(tokens[1])){
 	        	collector.emit(new Values(tokens[1]));
 	        }
