@@ -27,7 +27,7 @@ public class SplitterBolt extends BaseBasicBolt{
 				|| this.datsetType.equalsIgnoreCase(Keys.WIKIPEDIA)){
 	        String tokens[] = tuple.getString(0).split(" ");
 			//	        String tokens[] = tuple.getString(0).split("\\s+");
-	        if(tokens.length > 2 && !StringUtils.isBlank(tokens[1])){
+	        if(tokens.length >= 2 && !StringUtils.isBlank(tokens[1])){
 	        	collector.emit(new Values(tokens[1]));
 	        }
 		}
