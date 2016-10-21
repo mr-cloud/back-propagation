@@ -6,17 +6,17 @@ import java.util.Map;
 import org.apache.storm.Config;
 import org.apache.storm.Constants;
 import org.apache.storm.metric.api.CountMetric;
+import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;
-import org.apache.storm.topology.BasicOutputCollector;
 import org.apache.storm.topology.OutputFieldsDeclarer;
-import org.apache.storm.topology.base.BaseBasicBolt;
+import org.apache.storm.topology.base.BaseRichBolt;
 import org.apache.storm.tuple.Fields;
 import org.apache.storm.tuple.Tuple;
 import org.apache.storm.tuple.Values;
 import org.mlgb.storm.back_propagation.service.LatencySimulator;
 
 
-public class CounterBolt extends BaseBasicBolt{
+public class CounterBolt extends BaseRichBolt{
     private static final long serialVersionUID = -2350373680379322599L;
     private Map<String, Integer> counts = new HashMap<String, Integer>();
     private static final int DEFAULT_TICK_FREQUENCY_SECONDS = 10;
@@ -26,6 +26,7 @@ public class CounterBolt extends BaseBasicBolt{
 	private String metricName = "";
 	private int metricTimeBucketSizeInSecs;
 	private int latencyInMills;
+	private OutputCollector collector;
 	
     public CounterBolt(String outputField1, String outputField2, String metricName, int metricTimeBucketSizeInSecs, int latencyInMillis) {
 		// TODO Auto-generated constructor stub
@@ -36,32 +37,6 @@ public class CounterBolt extends BaseBasicBolt{
     	this.latencyInMills = latencyInMillis;
 	}
 
-	@Override
-	public void prepare(@SuppressWarnings("rawtypes") Map stormConf, TopologyContext context) {
-		// TODO Auto-generated method stub
-		this.countMetric = new CountMetric();
-		context.registerMetric(this.metricName, this.countMetric, this.metricTimeBucketSizeInSecs);
-	}
-
-	@Override
-    public void execute(Tuple tuple, BasicOutputCollector collector) {
-        if (isTickTuple(tuple)) {
-            emit(collector);
-            counts = new HashMap<String, Integer>();
-        } else {
-            String word = tuple.getString(0);
-            if (!word.isEmpty()) {
-                Integer count = counts.get(word);
-                if (count == null) {
-                    count = 0;
-                }
-                count++;
-                counts.put(word, count);
-            }
-            LatencySimulator.simulate(this.latencyInMills);
-            this.countMetric.incr();
-        }
-    }
     
 	@Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
@@ -79,11 +54,41 @@ public class CounterBolt extends BaseBasicBolt{
         return tuple.getSourceComponent().equals(Constants.SYSTEM_COMPONENT_ID) && tuple.getSourceStreamId().equals(Constants.SYSTEM_TICK_STREAM_ID);
     }
 
-    private void emit(BasicOutputCollector collector) {
+    private void emit(OutputCollector collector) {
         for (Map.Entry<String, Integer> entry : counts.entrySet()) {
             String str = entry.getKey();
             Integer count = entry.getValue();
             collector.emit(new Values(str, count));
         }
     }
+
+	@SuppressWarnings("rawtypes")
+	@Override
+	public void prepare(Map stormConf, TopologyContext context, OutputCollector collector) {
+		// TODO Auto-generated method stub
+		this.countMetric = new CountMetric();
+		context.registerMetric(this.metricName, this.countMetric, this.metricTimeBucketSizeInSecs);
+		this.collector = collector;
+	}
+
+	@Override
+	public void execute(Tuple input) {
+		// TODO Auto-generated method stub
+        if (isTickTuple(input)) {
+            emit(collector);
+            counts = new HashMap<String, Integer>();
+        } else {
+            String word = input.getString(0);
+            if (!word.isEmpty()) {
+                Integer count = counts.get(word);
+                if (count == null) {
+                    count = 0;
+                }
+                count++;
+                counts.put(word, count);
+            }
+            LatencySimulator.simulate(this.latencyInMills);
+            this.countMetric.incr();
+        }
+	}
 }

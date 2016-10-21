@@ -3,12 +3,13 @@ package org.mlgb.storm.back_propagation.topology.bolt;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.storm.topology.BasicOutputCollector;
+import org.apache.storm.task.OutputCollector;
+import org.apache.storm.task.TopologyContext;
 import org.apache.storm.topology.OutputFieldsDeclarer;
-import org.apache.storm.topology.base.BaseBasicBolt;
+import org.apache.storm.topology.base.BaseRichBolt;
 import org.apache.storm.tuple.Tuple;
 
-public class AggregatorBolt extends BaseBasicBolt{
+public class AggregatorBolt extends BaseRichBolt{
     private static final long serialVersionUID = -1410983886447378438L;
     private Map<String, Integer> counts = new HashMap<String, Integer>();
 
@@ -21,20 +22,29 @@ public class AggregatorBolt extends BaseBasicBolt{
     	this.valueField = valueField;
 	}
 
+
+    @Override
+    public void declareOutputFields(OutputFieldsDeclarer declarer) {
+    }
+
+	@SuppressWarnings("rawtypes")
 	@Override
-    public void execute(Tuple tuple, BasicOutputCollector collector) {
-        String word = tuple.getStringByField(this.keyField);
+	public void prepare(Map stormConf, TopologyContext context, OutputCollector collector) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void execute(Tuple input) {
+		// TODO Auto-generated method stub
+        String word = input.getStringByField(this.keyField);
         if (!word.isEmpty()) {
-            Integer delta_count = tuple.getIntegerByField(this.valueField);
+            Integer delta_count = input.getIntegerByField(this.valueField);
             Integer count = counts.get(word);
             if (count == null)
                 count = 0;
             count = count + delta_count;
             counts.put(word, count);
         }
-    }
-
-    @Override
-    public void declareOutputFields(OutputFieldsDeclarer declarer) {
-    }
+	}
 }
