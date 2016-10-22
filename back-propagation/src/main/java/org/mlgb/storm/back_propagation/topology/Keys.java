@@ -61,4 +61,9 @@ public class Keys {
 	
 	//topology name
 	public static final String TOPOLOGY_NAME = "BACK-PROPAGATION";
+	
+	//aggregator metric
+	public static final String AGGREGATOR_METRIC_NAME = "AGGREGATOR_METRIC_NAME";
+	public static final String AGGREGATOR_METRIC_TIME_BUCKET_SIZE_IN_SECS = "AGGREGATOR_METRIC_TIME_BUCKET_SIZE_IN_SECS";
+	
 }

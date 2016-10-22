@@ -39,6 +39,8 @@ public class BoltBuilder {
 	public AggregatorBolt buildAggregator(){
 		String keyField = Keys.COUNTER_BOLT_OUTPUTFIELD1;
 		String valueField = Keys.COUNTER_BOLT_OUTPUTFIELD2;
-		return new AggregatorBolt(keyField, valueField);
+		String metricName = this.configs.getProperty(Keys.AGGREGATOR_METRIC_NAME);
+		int metricTimeBucketSizeInSecs = Integer.parseInt(this.configs.getProperty(Keys.AGGREGATOR_METRIC_TIME_BUCKET_SIZE_IN_SECS));
+		return new AggregatorBolt(keyField, valueField, metricName, metricTimeBucketSizeInSecs);
 	}
 }
