@@ -15,6 +15,7 @@ public class AggregatorBolt extends BaseRichBolt{
 
     private String keyField = "";
     private String valueField = "";
+    private OutputCollector collector;
     
     public AggregatorBolt(String keyField, String valueField) {
 		// TODO Auto-generated constructor stub
@@ -31,7 +32,7 @@ public class AggregatorBolt extends BaseRichBolt{
 	@Override
 	public void prepare(Map stormConf, TopologyContext context, OutputCollector collector) {
 		// TODO Auto-generated method stub
-		
+		this.collector = collector;
 	}
 
 	@Override
@@ -46,5 +47,6 @@ public class AggregatorBolt extends BaseRichBolt{
             count = count + delta_count;
             counts.put(word, count);
         }
+        this.collector.ack(input);
 	}
 }

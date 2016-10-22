@@ -48,5 +48,6 @@ public class SplitterBolt extends BaseRichBolt{
 	        	collector.emit(new Values(tokens[1]));
 	        }
 		}
+		this.collector.ack(input);
 	}
 }

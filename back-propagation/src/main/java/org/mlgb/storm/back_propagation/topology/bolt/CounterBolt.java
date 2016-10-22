@@ -90,5 +90,6 @@ public class CounterBolt extends BaseRichBolt{
             LatencySimulator.simulate(this.latencyInMills);
             this.countMetric.incr();
         }
+        this.collector.ack(input);
 	}
 }

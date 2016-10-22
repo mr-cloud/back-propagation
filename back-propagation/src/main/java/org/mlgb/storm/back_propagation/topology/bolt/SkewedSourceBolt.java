@@ -44,6 +44,7 @@ public class SkewedSourceBolt extends BaseRichBolt{
 		if(!StringUtils.isBlank(word)){
 			collector.emit(new Values(word));
 		}
+		this.collector.ack(input);
 	}
 
 }
