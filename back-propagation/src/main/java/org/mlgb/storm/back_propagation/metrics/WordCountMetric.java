@@ -7,7 +7,7 @@ import java.util.Map.Entry;
 import org.apache.storm.metric.api.IMetric;
 
 public class WordCountMetric implements IMetric{
-	private Map<String, Integer> counts = new HashMap<String, Integer>();
+	private Map<String, Integer> counts = new HashMap<>();
 	@Override
 	public Object getValueAndReset() {
 		// TODO Auto-generated method stub
