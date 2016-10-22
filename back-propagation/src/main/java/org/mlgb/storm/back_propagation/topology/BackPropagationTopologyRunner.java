@@ -76,6 +76,7 @@ public class BackPropagationTopologyRunner {
 		config.setNumAckers(Integer.parseInt(configs.getProperty(Keys.NUM_WORKERS)));
 		config.registerMetricsConsumer(LoggingMetricsConsumer.class, Integer.parseInt(configs.getProperty(Keys.NUM_METRICS_CONSUMER)));
 		config.setNumEventLoggers(Integer.parseInt(configs.getProperty(Keys.NUM_EVENTLOGGERS)));
+		config.put(Config.TOPOLOGY_STATS_SAMPLE_RATE, 1);
 		return config;
 	}
 }
