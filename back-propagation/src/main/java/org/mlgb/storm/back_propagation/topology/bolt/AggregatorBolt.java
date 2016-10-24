@@ -21,7 +21,7 @@ public class AggregatorBolt extends BaseRichBolt{
     
 	private transient WordCountMetric wordCountMetric;
 	private String metricName = "";
-	private int metricTimeBucketSizeInSecs;
+	private int metricTimeBucketSizeInSecs = 15;
 	
     public AggregatorBolt(String keyField, String valueField, String metricName, int metricTimeBucketSizeInSecs) {
 		// TODO Auto-generated constructor stub

@@ -42,10 +42,10 @@ public class BackProgationTopologyBuilder {
 			.customGrouping(configs.getProperty(Keys.SKEWED_DATA_BOLT_ID), new PartialKeyGrouping());
 		
 		//set aggregator to topology
-		int aggregatorBoltCount = Integer.parseInt(configs.getProperty(Keys.AGGREGATOR_BOLT_COUNT));
+/*		int aggregatorBoltCount = Integer.parseInt(configs.getProperty(Keys.AGGREGATOR_BOLT_COUNT));
 		builder.setBolt(configs.getProperty(Keys.AGGREGATOR_BOLT_ID), boltBuilder.buildAggregator(), aggregatorBoltCount)
 			.fieldsGrouping(configs.getProperty(Keys.COUNTER_BOLT_ID), new Fields(Keys.COUNTER_BOLT_OUTPUTFIELD1));
-		
+*/		
 		return builder.createTopology();
 	}
 

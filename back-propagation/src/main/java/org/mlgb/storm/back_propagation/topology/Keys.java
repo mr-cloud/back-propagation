@@ -17,7 +17,9 @@ public class Keys {
 	//splitter
 	public static final String SPLITTER_BOLT_ID = "splitter-bolt";
 	public static final String SPLITTER_BOLT_COUNT = "splitter-bolt.count";
-	
+	//splitter latency
+	public static final String SPLITTER_LATENCY_IN_MILLIS = "SPLITTER_LATENCY_IN_MILLIS";
+
 	//skewed source
 	public static final String SKEWED_DATA_BOLT_ID = "skewed-source-bolt";
 	public static final String SKEWED_DATA_BOLT_COUNT = "skewed-source-bolt.count";

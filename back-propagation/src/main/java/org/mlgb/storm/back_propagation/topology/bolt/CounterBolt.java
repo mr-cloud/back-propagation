@@ -24,8 +24,8 @@ public class CounterBolt extends BaseRichBolt{
     private String outputField2 = "";
 	private transient CountMetric countMetric;
 	private String metricName = "";
-	private int metricTimeBucketSizeInSecs;
-	private int latencyInMills;
+	private int metricTimeBucketSizeInSecs = 10;
+	private int latencyInMillis = 0;
 	private OutputCollector collector;
 	
     public CounterBolt(String outputField1, String outputField2, String metricName, int metricTimeBucketSizeInSecs, int latencyInMillis) {
@@ -34,7 +34,7 @@ public class CounterBolt extends BaseRichBolt{
     	this.outputField2 = outputField2;
     	this.metricName = metricName;
     	this.metricTimeBucketSizeInSecs = metricTimeBucketSizeInSecs;
-    	this.latencyInMills = latencyInMillis;
+    	this.latencyInMillis = latencyInMillis;
 	}
 
     
@@ -78,6 +78,7 @@ public class CounterBolt extends BaseRichBolt{
             emit(collector);
             counts = new HashMap<String, Integer>();
         } else {
+            LatencySimulator.simulate(this.latencyInMillis);
             String word = input.getString(0);
             if (!word.isEmpty()) {
                 Integer count = counts.get(word);
@@ -87,7 +88,6 @@ public class CounterBolt extends BaseRichBolt{
                 count++;
                 counts.put(word, count);
             }
-            LatencySimulator.simulate(this.latencyInMills);
             this.countMetric.incr();
         }
         this.collector.ack(input);

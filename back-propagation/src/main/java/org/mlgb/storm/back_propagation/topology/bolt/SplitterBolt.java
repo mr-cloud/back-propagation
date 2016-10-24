@@ -10,6 +10,7 @@ import org.apache.storm.topology.base.BaseRichBolt;
 import org.apache.storm.tuple.Fields;
 import org.apache.storm.tuple.Tuple;
 import org.apache.storm.tuple.Values;
+import org.mlgb.storm.back_propagation.service.LatencySimulator;
 import org.mlgb.storm.back_propagation.topology.Keys;
 
 public class SplitterBolt extends BaseRichBolt{
@@ -18,6 +19,7 @@ public class SplitterBolt extends BaseRichBolt{
 	private String datsetType = "";
 	private String outputField = "";
 	private OutputCollector collector;
+	private int latencyInMillis = 0;
 	
     public SplitterBolt(String datasetType, String outputField) {
 		// TODO Auto-generated constructor stub
@@ -25,7 +27,13 @@ public class SplitterBolt extends BaseRichBolt{
     	this.outputField = outputField;
 	}
 
-    @Override
+    public SplitterBolt(String datasetType, String outputField, int latencyInMillis) {
+		// TODO Auto-generated constructor stub
+    	this(datasetType, outputField);
+    	this.latencyInMillis = latencyInMillis;
+	}
+
+	@Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
         declarer.declare(new Fields(this.outputField));
     }
@@ -40,6 +48,7 @@ public class SplitterBolt extends BaseRichBolt{
 	@Override
 	public void execute(Tuple input) {
 		// TODO Auto-generated method stub
+        LatencySimulator.simulate(this.latencyInMillis);
 		if(this.datsetType.equalsIgnoreCase(Keys.WIKIPEDIA_SAMPLE)
 				|| this.datsetType.equalsIgnoreCase(Keys.WIKIPEDIA)){
 	        String tokens[] = input.getString(0).split(" ");

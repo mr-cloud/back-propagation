@@ -19,7 +19,8 @@ public class BoltBuilder {
 	public SplitterBolt buildSplitter(){
 		String datasetType = this.configs.getProperty(Keys.KAFKA_TOPIC);
 		String outputField = Keys.SPLITTER_BOLT_OUTPUTFIELD;
-		return new SplitterBolt(datasetType, outputField);
+		int latencyInMillis = Integer.parseInt(this.configs.getProperty(Keys.SPLITTER_LATENCY_IN_MILLIS));
+		return new SplitterBolt(datasetType, outputField, latencyInMillis);
 	}
 	
 	public SkewedSourceBolt buildSkewedSource(){
