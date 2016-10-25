@@ -68,4 +68,7 @@ public class Keys {
 	public static final String AGGREGATOR_METRIC_NAME = "AGGREGATOR_METRIC_NAME";
 	public static final String AGGREGATOR_METRIC_TIME_BUCKET_SIZE_IN_SECS = "AGGREGATOR_METRIC_TIME_BUCKET_SIZE_IN_SECS";
 	
+	//stats sample rate
+	public static final String TOPOLOGY_STATS_SAMPLE_RATE = "TOPOLOGY_STATS_SAMPLE_RATE";
+	
 }
