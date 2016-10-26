@@ -5,7 +5,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.storm.metric.api.IMetric;
-
+/**
+ * customized metrics collector.
+ * @author Leo
+ *
+ */
 public class WordCountMetric implements IMetric{
 	private Map<String, Integer> counts = new HashMap<>();
 	@Override
