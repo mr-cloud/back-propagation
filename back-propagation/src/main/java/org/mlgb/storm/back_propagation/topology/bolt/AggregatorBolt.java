@@ -10,7 +10,11 @@ import org.apache.storm.topology.OutputFieldsDeclarer;
 import org.apache.storm.topology.base.BaseRichBolt;
 import org.apache.storm.tuple.Tuple;
 import org.mlgb.storm.back_propagation.metrics.WordCountMetric;
-
+/**
+ * aggregate tuples from partial key grouping.
+ * @author Leo
+ *
+ */
 public class AggregatorBolt extends BaseRichBolt{
     private static final long serialVersionUID = -1410983886447378438L;
     private Map<String, Integer> counts = new HashMap<String, Integer>();

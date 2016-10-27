@@ -10,7 +10,11 @@ import org.apache.storm.topology.base.BaseRichBolt;
 import org.apache.storm.tuple.Fields;
 import org.apache.storm.tuple.Tuple;
 import org.apache.storm.tuple.Values;
-
+/**
+ * make skewed sources by fields grouping.
+ * @author Leo
+ *
+ */
 public class SkewedSourceBolt extends BaseRichBolt{
 
 	/**
@@ -20,9 +24,13 @@ public class SkewedSourceBolt extends BaseRichBolt{
 
 	private String outputField;
 	private OutputCollector collector;
+	private String counterBoltId = "";
+	private String counterBoltBpStreamId = "";
 	
-	public SkewedSourceBolt(String outputField){
+	public SkewedSourceBolt(String outputField, String counterBoltId, String counterBoltBpStreamId){
 		this.outputField = outputField;
+		this.counterBoltId = counterBoltId;
+		this.counterBoltBpStreamId = counterBoltBpStreamId;
 	}
 
 
@@ -40,11 +48,25 @@ public class SkewedSourceBolt extends BaseRichBolt{
 	@Override
 	public void execute(Tuple input) {
 		// TODO Auto-generated method stub
-		String word = input.getString(0);
-		if(!StringUtils.isBlank(word)){
-			collector.emit(new Values(word));
+		if(isBackPropagationTuple(input)){
+			long load = input.getLong(0);
+			int taskId = input.getSourceTask();
+			collector.emit(new Values(new CalibrationSignal(taskId, load)));
+		}
+		else{
+			String word = input.getString(0);
+			if(!StringUtils.isBlank(word)){
+				collector.emit(new Values(word));
+			}	
 		}
 		this.collector.ack(input);
+	}
+
+
+	private boolean isBackPropagationTuple(Tuple input) {
+		// TODO Auto-generated method stub
+		return this.counterBoltId.equalsIgnoreCase(input.getSourceComponent())
+				&& this.counterBoltBpStreamId.equalsIgnoreCase(input.getSourceStreamId());
 	}
 
 }

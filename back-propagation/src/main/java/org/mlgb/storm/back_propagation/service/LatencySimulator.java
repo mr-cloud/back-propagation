@@ -1,5 +1,9 @@
 package org.mlgb.storm.back_propagation.service;
-
+/**
+ * simulate latency in services.
+ * @author Leo
+ *
+ */
 public class LatencySimulator {
 	public static void simulate(int latencyInMillis){
 		try {

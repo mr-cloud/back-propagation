@@ -77,16 +77,21 @@ public class MetricsAnalyzer {
 		// TODO Auto-generated method stub
 		System.out.println("\nanalyzing " + log.getName() + "...");
 		String[] nameSegments = log.getName().trim().split("-");
+		String dataset = log.getName() + "_" + "sampledWP";
+		String sources = "5";
+		String workers = "5";
+		String grouping = "pkg";
+		String delay = "3";
 		if(nameSegments.length != 5){
-			System.out.println("can not parse log name!");
-			return;
+			System.out.println("can not parse log name! use default names.");
 		}
-		String dataset = nameSegments[0];
-		String sources = nameSegments[1];
-		String workers = nameSegments[2];
-		String grouping = nameSegments[3];
-		String delay = nameSegments[4];
-		
+		else{
+			dataset = nameSegments[0];
+			sources = nameSegments[1];
+			workers = nameSegments[2];
+			grouping = nameSegments[3];
+			delay = nameSegments[4];
+		}
 		Map<Long, LoadAuxer> loadMap = new HashMap<>();
 		BufferedReader bfr = new BufferedReader(new FileReader(log));
 		String line;
@@ -139,14 +144,19 @@ public class MetricsAnalyzer {
 				long curLoadSum = 0;
 				long curMaxLoad = 0;
 				for(LoadAuxer loadAuxer: loadMap.values()){
+					long curLoad = 0;
 					if(cnt < loadAuxer.loads.size()){
-						long curLoad = loadAuxer.loads.get(cnt);
-						curLoadSum += curLoad;
-						if(curLoad > curMaxLoad)
-							curMaxLoad = curLoad;
+						curLoad = loadAuxer.loads.get(cnt);
 					}
+					else{
+						curLoad = loadAuxer.loads.get(loadAuxer.loads.size()-1);
+					}
+					curLoadSum += curLoad;
+					if(curLoad > curMaxLoad)
+						curMaxLoad = curLoad;
 				}
-				imbalances.add(((double)curMaxLoad - ((double)curLoadSum)/loadMap.size())/curLoadSum);
+				if(curLoadSum != 0)
+					imbalances.add(((double)curMaxLoad - ((double)curLoadSum)/loadMap.size())/curLoadSum);
 			}
 			printStats(loadSum, maxLoad, maxCostTime, imbalance, throughput, imbalances);
 			
@@ -201,9 +211,9 @@ public class MetricsAnalyzer {
 				+ "\n" + "time cost of job in minutes: " + maxCostTime/60
 				+ "\n" + "throughput(keys/s): " + throughput
 				+ "\n" + "imbalance ratio in total: " + formatter.format(imbalance));
-/*		System.out.println("\nimbalance-time:");
+		System.out.println("\nimbalance-time:");
 		for(double imb: imbalances){
 			System.out.println(formatter.format(imb));
-		}*/
+		}
 	}
 }

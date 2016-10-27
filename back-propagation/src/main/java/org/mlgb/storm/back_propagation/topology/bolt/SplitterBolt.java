@@ -12,7 +12,11 @@ import org.apache.storm.tuple.Tuple;
 import org.apache.storm.tuple.Values;
 import org.mlgb.storm.back_propagation.service.LatencySimulator;
 import org.mlgb.storm.back_propagation.topology.Keys;
-
+/**
+ * parse varieties of data from kafka spout.
+ * @author Leo
+ *
+ */
 public class SplitterBolt extends BaseRichBolt{
 	private static final long serialVersionUID = -4094707939635564788L;
 

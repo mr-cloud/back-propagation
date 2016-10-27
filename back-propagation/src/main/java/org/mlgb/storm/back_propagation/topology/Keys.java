@@ -48,7 +48,8 @@ public class Keys {
 	public static final String SPLITTER_BOLT_OUTPUTFIELD = "word";
 	public static final String COUNTER_BOLT_OUTPUTFIELD1 = "word";
 	public static final String COUNTER_BOLT_OUTPUTFIELD2 = "count";
-	
+	public static final String COUNTER_BOLT_LOAD_OUTPUT_FIELD = "load";
+
 	//metrics consumer number
 	public static final String NUM_METRICS_CONSUMER = "NUM_METRICS_CONSUMER";
 	
@@ -74,5 +75,12 @@ public class Keys {
 	public static final String NUM_ACKERS = "NUM_ACKERS";
 	//backp-ressure
 	public static final String TOPOLOGY_BACKPRESSURE_ENABLE = "TOPOLOGY_BACKPRESSURE_ENABLE";
+	
+	//stream of counter
+	public static final String COUNTER_BOLT_DATA_STREAM = "COUNTER_BOLT_DATA_STREAM";
+	public static final String COUNTER_BOLT_BP_STREAM = "COUNTER_BOLT_BP_STREAM";
+	
+	//calibration frequency
+	public static final String CALIBRATION_TICK_FREQUENCY_SECONDS = "CALIBRATION_TICK_FREQUENCY_SECONDS";
 	
 }
