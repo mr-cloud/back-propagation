@@ -70,5 +70,9 @@ public class Keys {
 	
 	//stats sample rate
 	public static final String TOPOLOGY_STATS_SAMPLE_RATE = "TOPOLOGY_STATS_SAMPLE_RATE";
+	//acker number
+	public static final String NUM_ACKERS = "NUM_ACKERS";
+	//backp-ressure
+	public static final String TOPOLOGY_BACKPRESSURE_ENABLE = "TOPOLOGY_BACKPRESSURE_ENABLE";
 	
 }

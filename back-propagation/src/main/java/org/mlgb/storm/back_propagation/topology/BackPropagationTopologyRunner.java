@@ -73,10 +73,11 @@ public class BackPropagationTopologyRunner {
 		config.setDebug(debug);
 		config.setMessageTimeoutSecs(Integer.parseInt(configs.getProperty(Keys.TIMEOUT)));
 		config.setNumWorkers(Integer.parseInt(configs.getProperty(Keys.NUM_WORKERS)));
-		config.setNumAckers(Integer.parseInt(configs.getProperty(Keys.NUM_WORKERS)));
+		config.setNumAckers(Integer.parseInt(configs.getProperty(Keys.NUM_ACKERS)));
 		config.registerMetricsConsumer(LoggingMetricsConsumer.class, Integer.parseInt(configs.getProperty(Keys.NUM_METRICS_CONSUMER)));
 		config.setNumEventLoggers(Integer.parseInt(configs.getProperty(Keys.NUM_EVENTLOGGERS)));
 		config.put(Config.TOPOLOGY_STATS_SAMPLE_RATE, Double.parseDouble(configs.getProperty(Keys.TOPOLOGY_STATS_SAMPLE_RATE)));
+		config.put(Config.TOPOLOGY_BACKPRESSURE_ENABLE, Boolean.parseBoolean(configs.getProperty(Keys.TOPOLOGY_BACKPRESSURE_ENABLE)));
 		return config;
 	}
 }
