@@ -18,13 +18,14 @@ public class BoltBuilder {
 	
 	public SplitterBolt buildSplitter(){
 		String datasetType = this.configs.getProperty(Keys.KAFKA_TOPIC);
-		String outputField = Keys.SPLITTER_BOLT_OUTPUTFIELD;
+		String outputField1 = Keys.SPLITTER_BOLT_OUTPUTFIELD1;
+		String outputField2 = Keys.SPLITTER_BOLT_OUTPUTFIELD2;
 		int latencyInMillis = Integer.parseInt(this.configs.getProperty(Keys.SPLITTER_LATENCY_IN_MILLIS));
-		return new SplitterBolt(datasetType, outputField, latencyInMillis);
+		return new SplitterBolt(datasetType, outputField1, outputField2, latencyInMillis);
 	}
 	
 	public SkewedSourceBolt buildSkewedSource(){
-		String outputField = Keys.SPLITTER_BOLT_OUTPUTFIELD;
+		String outputField = Keys.SPLITTER_BOLT_OUTPUTFIELD2;
 		String counterBoltId = this.configs.getProperty(Keys.COUNTER_BOLT_ID);
 		String counterBoltBpStreamId = Keys.COUNTER_BOLT_BP_STREAM;
 		return new SkewedSourceBolt(outputField, counterBoltId, counterBoltBpStreamId);

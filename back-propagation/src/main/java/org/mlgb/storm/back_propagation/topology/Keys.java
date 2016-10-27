@@ -44,8 +44,11 @@ public class Keys {
 	//dataset type
 	public static final String WIKIPEDIA_SAMPLE = "sampledWP";
 	public static final String WIKIPEDIA = "WP";
+	public static final String LJ = "LJ";
+
 	//output fields
-	public static final String SPLITTER_BOLT_OUTPUTFIELD = "word";
+	public static final String SPLITTER_BOLT_OUTPUTFIELD1 = "from";
+	public static final String SPLITTER_BOLT_OUTPUTFIELD2 = "to";
 	public static final String COUNTER_BOLT_OUTPUTFIELD1 = "word";
 	public static final String COUNTER_BOLT_OUTPUTFIELD2 = "count";
 	public static final String COUNTER_BOLT_LOAD_OUTPUT_FIELD = "load";
