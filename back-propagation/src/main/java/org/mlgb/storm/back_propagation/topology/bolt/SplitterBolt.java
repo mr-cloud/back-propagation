@@ -16,26 +16,23 @@ import org.mlgb.storm.back_propagation.topology.Keys;
 public class SplitterBolt extends BaseRichBolt{
 	private static final long serialVersionUID = -4094707939635564788L;
 
-	private String datsetType = "";
-	private String outputField = "";
+	private String datasetType = "";
+	private String outputField1 = "";
+	private String outputField2 = "";
 	private OutputCollector collector;
 	private int latencyInMillis = 0;
-	
-    public SplitterBolt(String datasetType, String outputField) {
-		// TODO Auto-generated constructor stub
-    	this.datsetType = datasetType;
-    	this.outputField = outputField;
-	}
 
-    public SplitterBolt(String datasetType, String outputField, int latencyInMillis) {
+	public SplitterBolt(String datasetType, String outputField1, String outputField2, int latencyInMillis) {
 		// TODO Auto-generated constructor stub
-    	this(datasetType, outputField);
+    	this.datasetType = datasetType;
+    	this.outputField1 = outputField1;
+    	this.outputField2 = outputField2;
     	this.latencyInMillis = latencyInMillis;
 	}
 
 	@Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        declarer.declare(new Fields(this.outputField));
+        declarer.declare(new Fields(this.outputField1, this.outputField2));
     }
 
 	@SuppressWarnings("rawtypes")
@@ -49,13 +46,11 @@ public class SplitterBolt extends BaseRichBolt{
 	public void execute(Tuple input) {
 		// TODO Auto-generated method stub
         LatencySimulator.simulate(this.latencyInMillis);
-		if(this.datsetType.equalsIgnoreCase(Keys.WIKIPEDIA_SAMPLE)
-				|| this.datsetType.equalsIgnoreCase(Keys.WIKIPEDIA)){
-	        String tokens[] = input.getString(0).split(" ");
-			//	        String tokens[] = tuple.getString(0).split("\\s+");
-	        if(tokens.length >= 2 && !StringUtils.isBlank(tokens[1])){
-	        	collector.emit(new Values(tokens[1]));
-	        }
+		if(this.datasetType.equalsIgnoreCase(Keys.LJ)){
+			String tokens[] = input.getString(0).split("\\s+");
+			if(tokens.length >= 2 && !StringUtils.isBlank(tokens[0]) && !StringUtils.isBlank(tokens[1])){
+				collector.emit(new Values(tokens[0], tokens[1]));
+			}
 		}
 		this.collector.ack(input);
 	}

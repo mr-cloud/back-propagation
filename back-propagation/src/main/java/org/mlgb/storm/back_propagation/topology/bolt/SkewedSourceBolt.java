@@ -40,9 +40,9 @@ public class SkewedSourceBolt extends BaseRichBolt{
 	@Override
 	public void execute(Tuple input) {
 		// TODO Auto-generated method stub
-		String word = input.getString(0);
-		if(!StringUtils.isBlank(word)){
-			collector.emit(new Values(word));
+		String to = input.getString(1);
+		if(!StringUtils.isBlank(to)){
+			collector.emit(new Values(to));
 		}
 		this.collector.ack(input);
 	}

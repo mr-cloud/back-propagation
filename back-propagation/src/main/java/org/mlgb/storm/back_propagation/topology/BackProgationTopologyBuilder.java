@@ -34,7 +34,7 @@ public class BackProgationTopologyBuilder {
 		//set the skewed source to topology
 		int skewedSourceBoltCount = Integer.parseInt(configs.getProperty(Keys.SKEWED_DATA_BOLT_COUNT));
 		builder.setBolt(configs.getProperty(Keys.SKEWED_DATA_BOLT_ID), boltBuilder.buildSkewedSource(), skewedSourceBoltCount)
-			.fieldsGrouping(configs.getProperty(Keys.SPLITTER_BOLT_ID), new Fields(Keys.SPLITTER_BOLT_OUTPUTFIELD));
+			.fieldsGrouping(configs.getProperty(Keys.SPLITTER_BOLT_ID), new Fields(Keys.SPLITTER_BOLT_OUTPUTFIELD1));
 		
 		//set the counter to topology
 		int counterBoltCount = Integer.parseInt(configs.getProperty(Keys.COUNTER_BOLT_COUNT));
