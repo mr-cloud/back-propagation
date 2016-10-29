@@ -27,7 +27,10 @@ public class Keys {
 	//counter
 	public static final String COUNTER_BOLT_ID = "counter-bolt";
 	public static final String COUNTER_BOLT_COUNT = "counter-bolt.count";
-	
+
+	//tinker
+	public static final String TINKER_BOLT_ID = "TINKER_BOLT_ID";
+
 	//aggregator
 	public static final String AGGREGATOR_BOLT_ID = "aggregator-bolt";
 	public static final String AGGREGATOR_BOLT_COUNT = "aggregator-bolt.count";
@@ -44,11 +47,16 @@ public class Keys {
 	//dataset type
 	public static final String WIKIPEDIA_SAMPLE = "sampledWP";
 	public static final String WIKIPEDIA = "WP";
+	public static final String ZIPF1 = "Zipf1";
+	public static final String ZIPF2 = "Zipf2";
+	
+
 	//output fields
-	public static final String SPLITTER_BOLT_OUTPUTFIELD = "word";
+	public static final String SPLITTER_BOLT_OUTPUTFIELD = "anything";
 	public static final String COUNTER_BOLT_OUTPUTFIELD1 = "word";
 	public static final String COUNTER_BOLT_OUTPUTFIELD2 = "count";
 	public static final String COUNTER_BOLT_LOAD_OUTPUT_FIELD = "load";
+	public static final String TINKER_OUTPUTFIELD = "calibration-signal";
 
 	//metrics consumer number
 	public static final String NUM_METRICS_CONSUMER = "NUM_METRICS_CONSUMER";

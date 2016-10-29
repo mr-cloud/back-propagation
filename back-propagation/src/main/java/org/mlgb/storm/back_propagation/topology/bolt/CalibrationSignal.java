@@ -1,6 +1,9 @@
 package org.mlgb.storm.back_propagation.topology.bolt;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 /**
  * periodical calibration signal.
  * @author Leo
@@ -8,16 +11,18 @@ import java.io.Serializable;
  */
 public class CalibrationSignal implements Serializable{
 
-	public CalibrationSignal(int taskId, long load) {
+	public Map<Integer, Long> tasksLoad = new HashMap<>();
+	
+	public CalibrationSignal(Map<Integer, Long> tasksLoad) {
 		// TODO Auto-generated constructor stub
-		this.taskId = taskId;
-		this.load = load;
+		for(Entry<Integer, Long> en: tasksLoad.entrySet()){
+			this.tasksLoad.put(en.getKey().intValue(), en.getValue().longValue());
+		}
 	}
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	public int taskId;
-	public long load;
+
 
 }

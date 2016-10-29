@@ -34,26 +34,24 @@ public class PKGWithBackPropagation implements CustomStreamGrouping, Serializabl
 
     @Override
     public List<Integer> chooseTasks(int taskId, List<Object> values) {
-    	if((values.size() > 0) && (values.get(0) instanceof CalibrationSignal)){
+    	List<Integer> boltIds = new ArrayList<Integer>(1);
+    	if(values.size() == 0)
+    		return boltIds;
+    	if(values.get(0) instanceof CalibrationSignal){
     		CalibrationSignal signal = (CalibrationSignal)(values.get(0));
     		for(int i = 0; i < this.targetTasks.size(); i++){
-    			if(this.targetTasks.get(i).intValue() == signal.taskId){
-    				this.targetTaskStats[i] = signal.load;
-    				break;
-    			}
+    			Long load = signal.tasksLoad.get(this.targetTasks.get(i).intValue());
+    			this.targetTaskStats[i] = load.longValue();
     		}
-    		return new ArrayList<Integer>(1);
+    		return boltIds;
     	}
     	else{
-            List<Integer> boltIds = new ArrayList<Integer>(1);// capacity
-            if (values.size() > 0) {
-                String str = values.get(0).toString(); // assume key is the first field
-                int firstChoice = (int) (Math.abs(h1.hashBytes(str.getBytes()).asLong()) % this.targetTasks.size());
-                int secondChoice = (int) (Math.abs(h2.hashBytes(str.getBytes()).asLong()) % this.targetTasks.size());
-                int selected = targetTaskStats[firstChoice] > targetTaskStats[secondChoice] ? secondChoice : firstChoice;
-                boltIds.add(targetTasks.get(selected));
-                targetTaskStats[selected]++;
-            }
+    		String str = values.get(0).toString(); // assume key is the first field
+            int firstChoice = (int) (Math.abs(h1.hashBytes(str.getBytes()).asLong()) % this.targetTasks.size());
+            int secondChoice = (int) (Math.abs(h2.hashBytes(str.getBytes()).asLong()) % this.targetTasks.size());
+            int selected = targetTaskStats[firstChoice] > targetTaskStats[secondChoice] ? secondChoice : firstChoice;
+            boltIds.add(targetTasks.get(selected));
+            targetTaskStats[selected]++;	
             return boltIds;	
     	}
     }

@@ -2,7 +2,6 @@ package org.mlgb.storm.back_propagation.topology.bolt;
 
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;
 import org.apache.storm.topology.OutputFieldsDeclarer;
@@ -24,13 +23,9 @@ public class SkewedSourceBolt extends BaseRichBolt{
 
 	private String outputField;
 	private OutputCollector collector;
-	private String counterBoltId = "";
-	private String counterBoltBpStreamId = "";
 	
-	public SkewedSourceBolt(String outputField, String counterBoltId, String counterBoltBpStreamId){
+	public SkewedSourceBolt(String outputField){
 		this.outputField = outputField;
-		this.counterBoltId = counterBoltId;
-		this.counterBoltBpStreamId = counterBoltBpStreamId;
 	}
 
 
@@ -48,25 +43,7 @@ public class SkewedSourceBolt extends BaseRichBolt{
 	@Override
 	public void execute(Tuple input) {
 		// TODO Auto-generated method stub
-		if(isBackPropagationTuple(input)){
-			long load = input.getLong(0);
-			int taskId = input.getSourceTask();
-			collector.emit(new Values(new CalibrationSignal(taskId, load)));
-		}
-		else{
-			String word = input.getString(0);
-			if(!StringUtils.isBlank(word)){
-				collector.emit(new Values(word));
-			}	
-		}
+		this.collector.emit(new Values(input.getValue(0)));
 		this.collector.ack(input);
 	}
-
-
-	private boolean isBackPropagationTuple(Tuple input) {
-		// TODO Auto-generated method stub
-		return this.counterBoltId.equalsIgnoreCase(input.getSourceComponent())
-				&& this.counterBoltBpStreamId.equalsIgnoreCase(input.getSourceStreamId());
-	}
-
 }

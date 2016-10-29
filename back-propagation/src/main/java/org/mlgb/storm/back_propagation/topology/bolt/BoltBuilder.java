@@ -25,9 +25,7 @@ public class BoltBuilder {
 	
 	public SkewedSourceBolt buildSkewedSource(){
 		String outputField = Keys.SPLITTER_BOLT_OUTPUTFIELD;
-		String counterBoltId = this.configs.getProperty(Keys.COUNTER_BOLT_ID);
-		String counterBoltBpStreamId = Keys.COUNTER_BOLT_BP_STREAM;
-		return new SkewedSourceBolt(outputField, counterBoltId, counterBoltBpStreamId);
+		return new SkewedSourceBolt(outputField);
 	}
 	
 	public CounterBolt buildCounter(){
@@ -41,6 +39,11 @@ public class BoltBuilder {
 		return new CounterBolt(outputField1, outputField2, metricName, metricTimeBucketSizeInSecs, latencyInMillis, loadOutputField, calibrationTickFrequencySeconds);
 	}
 	
+	public Tinker buildTinker(){
+		String outputField = Keys.TINKER_OUTPUTFIELD;
+		int workers = Integer.parseInt(this.configs.getProperty(Keys.NUM_WORKERS));
+		return new Tinker(outputField, workers);
+	}
 	public AggregatorBolt buildAggregator(){
 		String keyField = Keys.COUNTER_BOLT_OUTPUTFIELD1;
 		String valueField = Keys.COUNTER_BOLT_OUTPUTFIELD2;
