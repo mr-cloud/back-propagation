@@ -41,8 +41,8 @@ public class BoltBuilder {
 	
 	public Tinker buildTinker(){
 		String outputField = Keys.TINKER_OUTPUTFIELD;
-		int workers = Integer.parseInt(this.configs.getProperty(Keys.NUM_WORKERS));
-		return new Tinker(outputField, workers);
+		int workersNum = Integer.parseInt(this.configs.getProperty(Keys.COUNTER_BOLT_COUNT));
+		return new Tinker(outputField, workersNum);
 	}
 	public AggregatorBolt buildAggregator(){
 		String keyField = Keys.COUNTER_BOLT_OUTPUTFIELD1;
