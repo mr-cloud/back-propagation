@@ -77,19 +77,20 @@ public class MetricsAnalyzer {
 		// TODO Auto-generated method stub
 		System.out.println("\nanalyzing " + log.getName() + "...");
 		String[] nameSegments = log.getName().trim().split("-");
-		String dataset = log.getName() + "_" + "sampledWP";
-		String sources = "5";
-		String workers = "5";
-		String grouping = "pkg";
-		String delay = "3";
+		String grouping = "";
+		String dataset = "";
+		String sources = "";
+		String workers = "";
+		String delay = "";
 		if(nameSegments.length != 5){
-			System.out.println("can not parse log name! use default names.");
+			System.out.println("can not parse log name! ignore this file.");
+			return;
 		}
 		else{
-			dataset = nameSegments[0];
-			sources = nameSegments[1];
-			workers = nameSegments[2];
-			grouping = nameSegments[3];
+			grouping = nameSegments[0];
+			dataset = nameSegments[1];
+			sources = nameSegments[2];
+			workers = nameSegments[3];
 			delay = nameSegments[4];
 		}
 		Map<Long, LoadAuxer> loadMap = new HashMap<>();
