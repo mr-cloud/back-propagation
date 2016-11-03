@@ -81,10 +81,10 @@ public class MetricsAnalyzer {
 			System.out.println("can not parse log name!");
 			return;
 		}
-		String dataset = nameSegments[0];
-		String sources = nameSegments[1];
-		String workers = nameSegments[2];
-		String grouping = nameSegments[3];
+		String grouping = nameSegments[0];
+		String dataset = nameSegments[1];
+		String sources = nameSegments[2];
+		String workers = nameSegments[3];
 		String delay = nameSegments[4];
 		
 		Map<Long, LoadAuxer> loadMap = new HashMap<>();
