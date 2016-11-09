@@ -39,8 +39,8 @@ public class BackProgationTopologyBuilder {
 		//set the counter to topology
 		int counterBoltCount = Integer.parseInt(configs.getProperty(Keys.COUNTER_BOLT_COUNT));
 		builder.setBolt(configs.getProperty(Keys.COUNTER_BOLT_ID), boltBuilder.buildCounter(), counterBoltCount)
-			.customGrouping(configs.getProperty(Keys.SKEWED_DATA_BOLT_ID), new PartialKeyGrouping());
-		
+//			.customGrouping(configs.getProperty(Keys.SKEWED_DATA_BOLT_ID), new PartialKeyGrouping());
+			.fieldsGrouping(configs.getProperty(Keys.SKEWED_DATA_BOLT_ID), new Fields(Keys.SPLITTER_BOLT_OUTPUTFIELD));
 		//set aggregator to topology
 /*		int aggregatorBoltCount = Integer.parseInt(configs.getProperty(Keys.AGGREGATOR_BOLT_COUNT));
 		builder.setBolt(configs.getProperty(Keys.AGGREGATOR_BOLT_ID), boltBuilder.buildAggregator(), aggregatorBoltCount)
