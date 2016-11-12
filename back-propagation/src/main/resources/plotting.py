@@ -16,43 +16,74 @@ def get_cmap(N):
         return scalar_map.to_rgba(index)
     return map_index_to_rgb_color
 
-grouping_colors={
-    'bpg': 'r',
-    'pkg': 'g',
-    'sg': 'b',
-    'kg': 'k'
+dataset_keys={
+    'zipf1': 'Zipf1',
+    'zipf2': 'Zipf2',
+    'WP': 'WP',
+    'lj': 'LJ'
 }
 
-grouping_sources_colors={
+grouping_indices={
+    'bpg': 0,
+    'pkg': 1,
+    'kg': 2,
+    'sg': 3
+}
+
+grouping_colors={
     0: 'r',
     1: 'g',
     2: 'b',
     3: 'k'
 }
 
+grouping_labels={
+    'bpg': 'BPG',
+    'pkg': 'PKG',
+    'kg': 'KG',
+    'sg': 'SG'
+}
+
+grouping_sources_colors={
+    0: 'r',
+    1: 'g',
+    2: 'b',
+    3: 'y',
+    4: 'm',
+    5: 'k'
+}
+
 grouping_style={
-    'bpg': grouping_colors['bpg'] + '^-',
-    'pkg': grouping_colors['pkg'] + 'o--',
-    'sg': grouping_colors['sg'] + 'x--',
-    'kg': grouping_colors['kg'] + 's--'
+    'bpg': grouping_colors[0] + '^-',
+    'pkg': grouping_colors[1] + 'o--',
+    'kg': grouping_colors[2] + 's-.',
+    'sg': grouping_colors[3] + 'x:'
 }
 
 grouping_sources_indices={
     'bpg-5': 0,
     'pkg-5': 1,
     'bpg-10': 2,
-    'pkg-10': 3
+    'pkg-10': 3,
+    'bpg-15': 4,
+    'pkg-15': 5
 }
 
 grouping_sources_labels={
-    'bpg-5': '$bpg_5$',
-    'bpg-10': '$bpg_{10}$',
-    'pkg-5': '$pkg_5$',
-    'pkg-10': '$pkg_{10}$'
+    'bpg-5': '$BPG_5$',
+    'bpg-10': '$BPG_{10}$',
+    'pkg-5': '$PKG_5$',
+    'pkg-10': '$PKG_{10}$',
+    'bpg-15': '$BPG_{15}$',
+    'pkg-15': '$PKG_{15}$'
 }
 
-def plotImbalance(imbalanceMap, ylabel, xlabel, legendLabels):
-    fig, ax = plt.subplots(1, imbalanceMap.__len__(), sharey=True)
+def plotImbalance(imbalanceMap, ylabel, xlabel, legendLabels, output='expViz/exp1.png'):
+    if imbalanceMap.__len__() == 1:
+        ax = [None]
+        fig, ax[0] = plt.subplots(1, imbalanceMap.__len__(), sharey=True)
+    else:
+        fig, ax = plt.subplots(1, imbalanceMap.__len__(), sharey=True)
     # legend_colors_generator = get_cmap(legendLabels.__len__())
     handles = []
     for ind, key in enumerate(imbalanceMap):
@@ -63,9 +94,11 @@ def plotImbalance(imbalanceMap, ylabel, xlabel, legendLabels):
             x[ind1] = int(x[ind1])
         df.index = x
         df = df.sort_index()
+        df = df.sort_index(axis=1)
         x = list(df.index)
-        x_axis = list(range(1, x.__len__()+1))
         w = 0.3
+        expand_coe = 1.2*np.ceil(w * legendLabels.__len__())
+        x_axis = list(expand_coe * np.asarray(range(1, x.__len__() + 1)))
         cols = list(df.columns)
         for ind2, col in enumerate(cols):
             # line = ax[ind].bar(np.asarray(x_axis)-(cols.__len__()/2 - ind2)*w, df.loc[:,col].values, width=w, \
@@ -77,23 +110,24 @@ def plotImbalance(imbalanceMap, ylabel, xlabel, legendLabels):
             handles = sub_handles
         ax[ind].set(xlabel=xlabel)
         ax[ind].set_yscale('log')
-        ax[ind].set_xlim([0, x.__len__() + 1])
-        ax[ind].set_ylim([1.0E-4, 1.0E-1])
+        ax[ind].set_xlim([0, expand_coe*(x.__len__() + 1)])
+        ax[ind].set_ylim([1.0E-4, 1.0])
         ax[ind].set_xticks(x_axis)
         ax[ind].set_xticklabels(x)
-        ax[ind].text(0.04,0.04, key, size='large')
+        ax[ind].text(0.04,0.5, dataset_keys[key], size='large')
     fig.legend(handles, legendLabels, 'upper center', ncol=legendLabels.__len__())
     fig.text(0.04, 0.5, ylabel, va='center', rotation='vertical', size='large')
     # plt.show()
     if not os.path.exists('expViz'):
         os.mkdir('expViz')
-    plt.savefig('expViz/exp1.png')
+    # plt.savefig('expViz/exp1.png')
+    plt.savefig(output)
     # pass
 
-def exp1_viz():
+def exp1_viz(metrics_dir = 'exp1', output='expViz/exp1.png'):
     imbalanceMap = {}
     groupingList = []
-    metrics_dir = 'exp1'
+    # metrics_dir = 'exp1'
     for metrics_file in os.listdir(metrics_dir):
         print('processing file: ' + metrics_file)
         metrics = json.loads(open(metrics_dir + '/' + metrics_file, 'r').read())
@@ -107,12 +141,15 @@ def exp1_viz():
         imbalance = float(metrics['imbalance'])
         throughput = int(metrics['throughput'])
         if not imbalanceMap.__contains__(dataset):
-            df = pd.DataFrame({grouping: imbalance}, index=[str(workers)])
+            df = pd.DataFrame({grouping_indices[grouping]: imbalance}, index=[str(workers)])
             imbalanceMap[dataset] = df
         else:
             df = imbalanceMap[dataset]
-            df.loc[str(workers), grouping] = imbalance
-    plotImbalance(imbalanceMap, ylabel='Imbalance Rate', xlabel='workers', legendLabels=groupingList)
+            df.loc[str(workers), grouping_indices[grouping]] = imbalance
+    groupingLabels = [None] * groupingList.__len__()
+    for ele in groupingList:
+        groupingLabels[grouping_indices[ele]] = grouping_labels[ele]
+    plotImbalance(imbalanceMap, ylabel='Imbalance Rate', xlabel='workers', legendLabels=groupingLabels, output=output)
 
 
 def plotThroughput(throughputContainer, ylabel, xlabel, legendLabels):
@@ -132,7 +169,7 @@ def plotThroughput(throughputContainer, ylabel, xlabel, legendLabels):
         handles.append(line)
     ax.set(xlabel=xlabel)
     ax.set_xlim([0, x.__len__() + 1])
-    ax.set_ylim([500, 6500])
+    ax.set_ylim([200, 2500])
     ax.set_xticks(x_axis)
     ax.set_xticklabels(x)
     ax.legend(handles, legendLabels, loc='lower left')
@@ -159,7 +196,10 @@ def exp3_viz():
         imbalance = float(metrics['imbalance'])
         throughput = int(metrics['throughput'])
         throughputContainer.loc[str(delay), grouping] = throughput
-    plotThroughput(throughputContainer, ylabel='Throughput (keys/s)', xlabel='Worker task delay(ms)', legendLabels=groupingList)
+    groupingLabels = []
+    for ele in groupingList:
+        groupingLabels.append(grouping_labels[ele])
+    plotThroughput(throughputContainer, ylabel='Throughput (keys/s)', xlabel='Worker task delay(ms)', legendLabels=groupingLabels)
 
 
 def plotImbalanceRobustness(imbalanceContainer, ylabel, xlabel, legendLabels):
@@ -172,7 +212,7 @@ def plotImbalanceRobustness(imbalanceContainer, ylabel, xlabel, legendLabels):
     imbalanceContainer = imbalanceContainer.sort_index(axis=1)
     x = list(imbalanceContainer.index)
     w = 0.3
-    expand_coe = np.ceil(w * legendLabels.__len__())
+    expand_coe = 1.2*np.ceil(w * legendLabels.__len__())
     x_axis = list(expand_coe * np.asarray(range(1, x.__len__() + 1)))
     cols = list(imbalanceContainer.columns)
     handles=[]
@@ -182,7 +222,7 @@ def plotImbalanceRobustness(imbalanceContainer, ylabel, xlabel, legendLabels):
         handles.append(handle)
     ax.set(xlabel=xlabel)
     ax.set_yscale('log')
-    ax.set_xlim([0, expand_coe*(x.__len__() + 1)])
+    ax.set_xlim([expand_coe*(-1), expand_coe*(x.__len__() + 1)])
     ax.set_ylim([1.0E-4, 1.0E-1])
     ax.set_xticks(x_axis)
     ax.set_xticklabels(x)
@@ -218,6 +258,10 @@ def exp2_viz():
                            legendLabels=groupingSourcesLabels)
 
 def main():
+    # exp1_viz()
+    # exp2_viz()
+    # exp3_viz()
+    exp1_viz(metrics_dir='exp1-wp', output='expViz/exp1-wp.png')
     # experiment 4: chronological stable
     pass
 
