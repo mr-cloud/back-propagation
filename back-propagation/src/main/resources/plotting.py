@@ -31,10 +31,10 @@ grouping_indices={
 }
 
 grouping_colors={
-    0: 'r',
-    1: 'g',
-    2: 'b',
-    3: 'k'
+    0:'#ff1a1a',
+    1:'#1aff1a',
+    2:'#1a1aff',
+    3:'#0d0d0d'
 }
 
 grouping_labels={
@@ -45,14 +45,13 @@ grouping_labels={
 }
 
 grouping_sources_colors={
-    0: 'r',
-    1: 'g',
-    2: 'b',
-    3: 'y',
-    4: 'm',
-    5: 'k'
+    0:'#ff1a1a',
+    1:'#1aff1a',
+    2:'#1a1aff',
+    3:'#ff1aff',
+    4:'#1affff',
+    5:'#0d0d0d'
 }
-
 grouping_style={
     'bpg': grouping_colors[0] + '^-',
     'pkg': grouping_colors[1] + 'o--',
@@ -60,6 +59,26 @@ grouping_style={
     'sg': grouping_colors[3] + 'x:'
 }
 
+grouping_line_color={
+    'bpg': '#ff1a1a',
+    'pkg': '#1aff1a',
+    'kg': '#1a1aff',
+    'sg': '#0d0d0d'
+}
+
+grouping_line_style={
+    'bpg': '-',
+    'pkg': '--',
+    'kg': '-.',
+    'sg': ':'
+}
+
+grouping_line_marker={
+    'bpg': '^',
+    'pkg': 'o',
+    'kg': 's',
+    'sg': 'x'
+}
 grouping_sources_indices={
     'bpg-5': 0,
     'pkg-5': 1,
@@ -77,6 +96,35 @@ grouping_sources_labels={
     'bpg-15': '$BPG_{15}$',
     'pkg-15': '$PKG_{15}$'
 }
+
+
+def exp2_time_viz(metrics_dir = 'exp2-time', output='expViz/exp2-time.pdf'):
+    imbalanceMap = {}
+    groupingList = []
+    # metrics_dir = 'exp1'
+    for metrics_file in os.listdir(metrics_dir):
+        print('processing file: ' + metrics_file)
+        metrics = json.loads(open(metrics_dir + '/' + metrics_file, 'r').read())
+        dataset = str(metrics['dataset'])
+        sources = int(metrics['sources'])
+        workers = int(metrics['workers'])
+        grouping = str(metrics['grouping'])
+        if not groupingList.__contains__(grouping):
+            groupingList.append(grouping)
+        delay = int(metrics['delay'])
+        imbalance = float(metrics['imbalance'])
+        throughput = int(metrics['throughput'])
+        imbalance_time = metrics['imbalances']
+        if not imbalanceMap.__contains__(dataset + str(workers)):
+            df = pd.DataFrame({grouping_indices[grouping]: imbalance}, index=[str(workers)])
+            imbalanceMap[dataset] = df
+        else:
+            df = imbalanceMap[dataset]
+            df.loc[str(workers), grouping_indices[grouping]] = imbalance
+    groupingLabels = [None] * groupingList.__len__()
+    for ele in groupingList:
+        groupingLabels[grouping_indices[ele]] = grouping_labels[ele]
+    plotImbalance(imbalanceMap, ylabel='Imbalance Rate', xlabel='workers', legendLabels=groupingLabels, output=output)
 
 def plotImbalance(imbalanceMap, ylabel, xlabel, legendLabels, output='expViz/exp1.png'):
     if imbalanceMap.__len__() == 1:
@@ -104,7 +152,7 @@ def plotImbalance(imbalanceMap, ylabel, xlabel, legendLabels, output='expViz/exp
             # line = ax[ind].bar(np.asarray(x_axis)-(cols.__len__()/2 - ind2)*w, df.loc[:,col].values, width=w, \
             #             color=legend_colors_generator(ind2), align='center', log=True)
             line = ax[ind].bar(np.asarray(x_axis)-(cols.__len__()/2 - ind2)*w, df.loc[:,col].values, width=w, \
-                        color=grouping_colors[col], align='center', log=True)
+                        color=grouping_colors[col], align='center', log=True, edgecolor='none')
             sub_handles.append(line)
         if sub_handles.__len__() > handles.__len__():
             handles = sub_handles
@@ -115,7 +163,7 @@ def plotImbalance(imbalanceMap, ylabel, xlabel, legendLabels, output='expViz/exp
         ax[ind].set_xticks(x_axis)
         ax[ind].set_xticklabels(x)
         ax[ind].text(0.04,0.5, dataset_keys[key], size='large')
-    fig.legend(handles, legendLabels, 'upper center', ncol=legendLabels.__len__())
+    fig.legend(handles, legendLabels, 'upper center', ncol=legendLabels.__len__(), frameon=False)
     fig.text(0.04, 0.5, ylabel, va='center', rotation='vertical', size='large')
     # plt.show()
     if not os.path.exists('expViz'):
@@ -165,19 +213,21 @@ def plotThroughput(throughputContainer, ylabel, xlabel, legendLabels):
     cols = list(throughputContainer.columns)
     handles=[]
     for ind1, col in enumerate(cols):
-        line, = ax.plot(x_axis, throughputContainer.loc[:,col].values, grouping_style[col])
+        line, = ax.plot(x_axis, throughputContainer.loc[:,col].values, color=grouping_line_color[col],\
+                        linestyle=grouping_line_style[col], marker=grouping_line_marker[col],\
+                        markeredgecolor=grouping_line_color[col])
         handles.append(line)
     ax.set(xlabel=xlabel)
     ax.set_xlim([0, x.__len__() + 1])
     ax.set_ylim([200, 2500])
     ax.set_xticks(x_axis)
     ax.set_xticklabels(x)
-    ax.legend(handles, legendLabels, loc='lower left')
+    ax.legend(handles, legendLabels, loc='lower left', frameon=False)
     fig.text(0.04, 0.5, ylabel, va='center', rotation='vertical', size='large')
     # plt.show()
     if not os.path.exists('expViz'):
         os.mkdir('expViz')
-    plt.savefig('expViz/exp3.png')
+    plt.savefig('expViz/exp3.pdf')
 
 def exp3_viz():
     groupingList = []
@@ -199,7 +249,7 @@ def exp3_viz():
     groupingLabels = []
     for ele in groupingList:
         groupingLabels.append(grouping_labels[ele])
-    plotThroughput(throughputContainer, ylabel='Throughput (keys/s)', xlabel='Worker task delay(ms)', legendLabels=groupingLabels)
+    plotThroughput(throughputContainer, ylabel='Throughput (messages/s)', xlabel='Worker task delay(ms)', legendLabels=groupingLabels)
 
 
 def plotImbalanceRobustness(imbalanceContainer, ylabel, xlabel, legendLabels):
@@ -218,7 +268,7 @@ def plotImbalanceRobustness(imbalanceContainer, ylabel, xlabel, legendLabels):
     handles=[]
     for ind, col in enumerate(cols):
         handle = ax.bar(np.asarray(x_axis) - (cols.__len__() / 2 - ind) * w, imbalanceContainer.loc[:, col].values, \
-                        width=w, color=grouping_sources_colors[col], align='center', log=True)
+                        width=w, color=grouping_sources_colors[col], align='center', log=True, edgecolor='none')
         handles.append(handle)
     ax.set(xlabel=xlabel)
     ax.set_yscale('log')
@@ -226,12 +276,12 @@ def plotImbalanceRobustness(imbalanceContainer, ylabel, xlabel, legendLabels):
     ax.set_ylim([1.0E-4, 1.0E-1])
     ax.set_xticks(x_axis)
     ax.set_xticklabels(x)
-    ax.legend(handles, legendLabels, loc='upper left')
+    ax.legend(handles, legendLabels, loc='upper left', frameon=False)
     fig.text(0.04, 0.5, ylabel, va='center', rotation='vertical', size='large')
     # plt.show()
     if not os.path.exists('expViz'):
         os.mkdir('expViz')
-    plt.savefig('expViz/exp2.png')
+    plt.savefig('expViz/exp2.pdf')
     pass
 
 def exp2_viz():
@@ -258,10 +308,10 @@ def exp2_viz():
                            legendLabels=groupingSourcesLabels)
 
 def main():
-    # exp1_viz()
+    # exp1_viz(output='expViz/exp1.pdf')
     # exp2_viz()
-    # exp3_viz()
-    exp1_viz(metrics_dir='exp1-wp', output='expViz/exp1-wp.png')
+    exp3_viz()
+    #exp1_viz(metrics_dir='exp1-wp', output='expViz/exp1-wp.pdf')
     # experiment 4: chronological stable
     pass
 
