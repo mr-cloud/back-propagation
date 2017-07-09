@@ -2,19 +2,8 @@ import os
 import json
 import pandas as pd
 import matplotlib.pyplot as plt
-import matplotlib.cm as cmx
-import matplotlib.colors as colors
 import numpy as np
 
-
-def get_cmap(N):
-    '''Returns a function that maps each index in 0, 1, ... N-1 to a distinct
-    RGB color.'''
-    color_norm  = colors.Normalize(vmin=0, vmax=N - 1)
-    scalar_map = cmx.ScalarMappable(norm=color_norm, cmap='hsv')
-    def map_index_to_rgb_color(index):
-        return scalar_map.to_rgba(index)
-    return map_index_to_rgb_color
 
 dataset_keys={
     'zipf1': 'Zipf1',
@@ -132,7 +121,6 @@ def plotImbalance(imbalanceMap, ylabel, xlabel, legendLabels, output='expViz/exp
         fig, ax[0] = plt.subplots(1, imbalanceMap.__len__(), sharey=True)
     else:
         fig, ax = plt.subplots(1, imbalanceMap.__len__(), sharey=True)
-    # legend_colors_generator = get_cmap(legendLabels.__len__())
     handles = []
     for ind, key in enumerate(imbalanceMap):
         sub_handles=[]
@@ -149,8 +137,6 @@ def plotImbalance(imbalanceMap, ylabel, xlabel, legendLabels, output='expViz/exp
         x_axis = list(expand_coe * np.asarray(range(1, x.__len__() + 1)))
         cols = list(df.columns)
         for ind2, col in enumerate(cols):
-            # line = ax[ind].bar(np.asarray(x_axis)-(cols.__len__()/2 - ind2)*w, df.loc[:,col].values, width=w, \
-            #             color=legend_colors_generator(ind2), align='center', log=True)
             line = ax[ind].bar(np.asarray(x_axis)-(cols.__len__()/2 - ind2)*w, df.loc[:,col].values, width=w, \
                         color=grouping_colors[col], align='center', log=True, edgecolor='none')
             sub_handles.append(line)
@@ -308,6 +294,8 @@ def exp2_viz():
                            legendLabels=groupingSourcesLabels)
 
 def main():
+	# data format: {'dataset': df[#workers|delay, grouping[sources]] = imbalance|throughput}
+	
     # exp1_viz(output='expViz/exp1.pdf')
     # exp2_viz()
     exp3_viz()
